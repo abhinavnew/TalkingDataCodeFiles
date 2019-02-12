@@ -418,7 +418,7 @@ res_submit=cbind(test_dev_id,as.data.frame(pred_final_gbm))
 
 
 
-endtime=proc.time()
+##endtime=proc.time()
 timetakens=starttime-endtime
 cat(timetakens)
 
