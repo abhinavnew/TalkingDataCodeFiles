@@ -227,6 +227,8 @@ validateset_xg=validate_splitt
 #Converting dependent variable to corresponding factor numeric value and storing as numeric and then converting to factor again
 trainset_rf$group=as.factor(make.names(trainset_rf$group))
 str(trainset)
+small_trainset=trainset_rf[1:5000,]
+small_trainset[is.na(small_trainset)]<--999
 
 ##Testset prep common for BOTH STACKING models
 testset=subset(full_wide,full_wide$ind=="test")
@@ -257,8 +259,10 @@ rm(full_activeset3,wide)
 ##Preparing Random Forest model and running with caret/train
 set.seed(114)
 ##Adding variable importance part 
-##boruta_train=Boruta(group ~.,data=small_trainset,doTrace=2)
-##boruta_bank=TentativeRoughFix(boruta_train)
+
+
+boruta_train=Boruta(group ~.,data=small_trainset,doTrace=2)
+boruta_bank=TentativeRoughFix(boruta_train)
 ##keepimp=getSelectedAttributes(boruta_bank,withTentative = F)
 ##write.csv(as.data.frame(keepimp),"E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\boruta_Variables.csv")
 keepimp=read.csv("E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\boruta_Variables.csv")
@@ -448,4 +452,4 @@ cat(timetakens)
 colnames(res_submit)=c("device_id","F23-","F24-26","F27-28","F29-32","F33-42","F43+","M22-","M23-26","M27-28","M29-31","M32-38","M39+")
 
 
-write.csv(res_submit,"E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\Submit9_TWOleveltime_data_stacking.csv",row.names = F,quote = F)
+write.csv(res_submit,"E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\Submit10_TWOlevelStack_timedata_stacking.csv",row.names = F,quote = F)
