@@ -20,6 +20,7 @@ library(Boruta)
 library(MLmetrics)
 library(class)
 library(sqldf)
+library(scales)
 
 ##scientific notation off for the session
 options(scipen = 999)

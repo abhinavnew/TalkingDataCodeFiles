@@ -1,0 +1,56 @@
+---
+title: "Test_Markdown_doc"
+author: "AbhinavB"
+date: "February 16, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown Test Report
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Events samples in talkingdataUserDemographics Problem 
+```{r events, echo=TRUE}
+dim(events)
+str(events)
+```
+
+## Exploring relationship between Brand/Model and target Variable
+
+You can also embed plots, for example:
+
+```{r pressure, echo=TRUE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+##Finding Brand with highest counts in the training data available 
+
+```{r TrainwithPh,echo=TRUE}
+library(ggplot2)
+library(dplyr)
+ggplot(TrainwithPh,aes(x=numbrand))+geom_histogram()+scale_x_continuous(limits = c(1,120),breaks = seq(0,100,10))
+
+ggplot(data=TrainWithPh,aes(x=group,y=numbrand))+geom_point(alpha=1/20,color='orange')
+tr1=TrainWithPh[TrainWithPh$ind=="train",]
+agroups=count(tr1,numbrand,group)
+
+```
+
+## Displaying brandwise/model wise  distribution of groups
+```{r tr1,echo=TRUE}
+ggplot(data=tr1,aes(x=(numbrand),fill=group))+geom_bar(position = "fill",colour='black')+scale_x_continuous(breaks=function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))
+
+ggplot(data=tr1,aes(x=(tr1$nummodel),fill=group))+geom_bar(position = "fill")
+
+```
+
+##Display 
+
