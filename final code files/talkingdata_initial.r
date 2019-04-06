@@ -12,6 +12,7 @@ library(caTools)
 library(randomForest)
 library(ggplot2)
 library(data.table)
+library(neuralnet)
 require(bit64)
 
 ##scientific notation off for the session

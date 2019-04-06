@@ -21,12 +21,14 @@ library(MLmetrics)
 library(class)
 library(sqldf)
 library(scales)
+library(TeachingDemos)
+library(neuralnet)
 
-##scientific notation off for the session
+#scientific notation off for the session
 options(scipen = 999)
 rm(list = ls());gc()
 
-
+txtStart("capturecode.txt")
 
  ## Read given files
  app_event=fread("E:\\AbhinavB\\Kaggle\\TalkingData\\app_events.csv",data.table = FALSE,colClasses = c("character","character","character","character"))
@@ -202,6 +204,7 @@ wide=full_activeset4 %>%mutate(i=1)
 full_wide=dcast(wide,device_id+gender+age+group+ind+numbrand+nummodel+Bin_1+Bin_2+Bin_3+Bin_4 ~ numCategories,value.var = "i",fun.aggregate = sum)
 dim(full_wide)
 
+txtStop()
 ##trainset prep common for BOTH STACKING MODELS
 
 ##preparing train and validate set

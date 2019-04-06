@@ -52,5 +52,32 @@ ggplot(data=tr1,aes(x=(tr1$nummodel),fill=group))+geom_bar(position = "fill")
 
 ```
 
-##Display 
+##Display if any age group makes call in any particular time of day 
+```{r wide ,echo=TRUE}
+
+temp1=wide
+temp1=wide
+temp1=temp1[,-c(1,2,3,6,7,8)]
+temp1=temp1[temp1$ind=="train",]
+ temp1=temp1[,-c(2)]
+ head(temp1)
+temp2=temp1[complete.cases(temp1),]
+temp2=temp2[,-c(6)]
+temp3=temp2 %>% group_by(group) %>% summarise(Bin_1=sum(Bin_1),Bin_2=sum(Bin_2),Bin_3=sum(Bin_3),Bin_4=sum(Bin_4))
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
