@@ -222,17 +222,65 @@ validate_splitt=subset(trainsetfull,splitt==FALSE)
 
 dim(trainset_splitt)
 dim(validate_splitt)
-small_train=trainset_splitt[1:1000,]
+trainset_splitt=trainset_splitt[complete.cases(trainset_splitt),]
+validate_splitt=validate_splitt[complete.cases(validate_splitt),]
+
+dim(trainset_splitt)
+dim(validate_splitt)
+
+#drop AppCAt_NA column as it holds no meaning 
+trainset_splitt=trainset_splitt[,-c(444)]
+validate_splitt=validate_splitt[,-c(444)]
+dim(trainset_splitt)
+dim(validate_splitt)
+
+
+
+#min max scaling for all input variables 
+sclfun=function(x){ 
+  if (x==0 && min(x)==0 && max(x)==0 ){
+ k= x
+  }
+  else
+    { k=(x-min(x))/(max(x)-min(x))  }   
+  
+  return(k)
+  }
+trainset_scl=trainset_splitt
+trainset_scl2=apply(trainset_scl[-1],2,sclfun)
+
+
+
+##Testset prep 
+testset=subset(full_wide,full_wide$ind=="test")
+colnames(testset)
+dim(testset)
+#remove duplicates should be 112071 rows
+testset=testset[!duplicated(testset$device_id),]
+dim(testset)
+test_dev_id=testset$device_id
+length(test_dev_id)
+head(test_dev_id)
+##removing cols including device id which is unique and not useful for modelling
+testset=testset[,-c(1,2,3,5)]
+## remove duplicates (from testset) based on just one field ie device id ,doesn't matter which row is removed 
+colnames(testset)
+dim(testset)
+##dropping timeBin columns due to NA values 
+testset_fin=testset[,-c(4,5,6,7)]
 
 ##training a neuralnet model and tuning
 set.seed(123)
 
-m=neuralnet(group ~ .,data=small_train,hidden = 1)
+m=neuralnet(group ~ .,data=trainset_splitt,hidden = 1,threshold = 0.1,linear.output = FALSEglimpse)
 plot(m)
 
 ##making predictions
 
-p=compute(m,)
+p=compute(m,validate_splitt)
+prob_validate=p$net.result
+
+
 
 
 
