@@ -21,8 +21,8 @@
 + data.table = FALSE, colClasses = "character")
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   6277964  335.3   12300684  657.0   6308842  337.0
-Vcells 174877342 1334.3  459697875 3507.3 468270772 3572.7
+Ncells   6408143  342.3   12825982  685.0   6437920  343.9
+Vcells 175203356 1336.7  397756015 3034.7 373852720 2852.3
 > colnames(ph_bd_dev_model)[colSums(is.na(ph_bd_dev_model)) > 0]
 character(0)
 > colnames(events)[colSums(is.na(events)) > 0]
@@ -108,8 +108,8 @@ character(0)
 > rm(tdtrain, tdtest, tdtest1, ph_bd_dev_model, events)
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   6247279  333.7   12300684  657.0  12300684  657.0
-Vcells 196865975 1502.0  459697875 3507.3 468270772 3572.7
+Ncells   6366902  340.1   12825982  685.0  12825982  685.0
+Vcells 197166994 1504.3  397756015 3034.7 395548859 3017.8
 > TrainWithAppevents = left_join(TrainWithEvents, app_event, by = "event_id")
 > colnames(TrainWithAppevents)
  [1] "device_id"    "gender"       "age"          "group"        "ind"          "phone_brand"  "device_model" "numbrand"     "nummodel"     "event_id"     "timestamp"   
@@ -117,8 +117,8 @@ Vcells 196865975 1502.0  459697875 3507.3 468270772 3572.7
 > rm(TrainWithEvents, app_event)
 > gc()
             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells   6205291  331.4   12300684  657.0  12300684  657.0
-Vcells 516942400 3944.0  823731036 6284.6 718343946 5480.6
+Ncells   6324940  337.8   12825982  685.0  12825982  685.0
+Vcells 517243461 3946.3  867873828 6621.4 718645000 5482.9
 > TrainWithAppevents_rel4 = distinct(TrainWithAppevents)
 > temp2_rel = TrainWithAppevents_rel4[, -c(6, 7, 10, 11, 12, 13, 
 + 15)]
@@ -127,8 +127,8 @@ Vcells 516942400 3944.0  823731036 6284.6 718343946 5480.6
 > rm(TrainWithAppevents, TrainWithAppevents_rel4)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   2456595  131.2    9840547  525.6   12300684  657.0
-Vcells 309569810 2361.9  982407108 7495.2 1021598449 7794.2
+Ncells   2576456  137.6   10260785  548.0   12825982  685.0
+Vcells 309871082 2364.2  853504741 6511.8 1021899506 7796.5
 > temp2_rel2 = distinct(temp2_rel)
 > dim(temp2_rel2)
 [1] 2917436       9
@@ -137,8 +137,8 @@ Vcells 309569810 2361.9  982407108 7495.2 1021598449 7794.2
 > rm(temp2_rel)
 > gc()
            used  (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells  2456605 131.2    7872437  420.5   12300684  657.0
-Vcells 48397521 369.3  785925686 5996.2 1021598449 7794.2
+Ncells  2576466 137.6    8208628  438.4   12825982  685.0
+Vcells 48698793 371.6  682803792 5209.4 1021899506 7796.5
 > temp3 = left_join(temp2_rel2, app_labels, by = "app_id")
 > length(unique(temp3$device_id))
 [1] 186716
@@ -149,16 +149,16 @@ Vcells 48397521 369.3  785925686 5996.2 1021598449 7794.2
 > rm(temp2_rel2)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   2456615  131.2    7872437  420.5   12300684  657.0
-Vcells 185214445 1413.1  628740548 4797.0 1021598449 7794.2
+Ncells   2576474  137.6    8208628  438.4   12825982  685.0
+Vcells 185515717 1415.4  546243033 4167.6 1021899506 7796.5
 > temp4 = distinct(temp3)
 > length(unique(temp4$device_id))
 [1] 186716
 > rm(temp3)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   2456613  131.2    7872437  420.5   12300684  657.0
-Vcells 184198030 1405.4  502992438 3837.6 1021598449 7794.2
+Ncells   2576472  137.6    8208628  438.4   12825982  685.0
+Vcells 184499302 1407.7  546243033 4167.6 1021899506 7796.5
 > colnames(temp4)
  [1] "device_id" "gender"    "age"       "group"     "ind"       "numbrand"  "nummodel"  "app_id"    "is_active" "label_id" 
 > temp5 = left_join(temp4, label_categories, by = "label_id")
@@ -171,8 +171,8 @@ Vcells 184198030 1405.4  502992438 3837.6 1021598449 7794.2
 + tdtest, tdtest1, tdtrain)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   2362312  126.2    7872437  420.5   12300684  657.0
-Vcells 370494202 2826.7  603670925 4605.7 1021598449 7794.2
+Ncells   2482168  132.6    8208628  438.4   12825982  685.0
+Vcells 370795473 2829.0  546243033 4167.6 1021899506 7796.5
 > temp5_rel = temp5[, -c(10, 11)]
 > dim(temp5_rel)
 [1] 17844302       10
@@ -193,8 +193,8 @@ Vcells 370494202 2826.7  603670925 4605.7 1021598449 7794.2
 > rm(temp4, temp5, temp5_rel)
 > gc()
             used   (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells   2361481  126.2    7872437  420.5   12300684  657.0
-Vcells 192048228 1465.3  603670925 4605.7 1021598449 7794.2
+Ncells   2481364  132.6    8208628  438.4   12825982  685.0
+Vcells 192349536 1467.6  546243033 4167.6 1021899506 7796.5
 > full_activeset$numCategories <- ifelse(full_activeset$is_active == 
 + 0, "NA", full_activeset$numCategories)
 > full_activeset1 = distinct(full_activeset)
@@ -210,8 +210,8 @@ Vcells 192048228 1465.3  603670925 4605.7 1021598449 7794.2
 > rm(fullset, full_activeset, full_activeset1, full_activeset2)
 > gc()
            used  (Mb) gc trigger   (Mb)   max used   (Mb)
-Ncells  2343016 125.2    7872437  420.5   12300684  657.0
-Vcells 36963076 282.1  482936740 3684.6 1021598449 7794.2
+Ncells  2462898 131.6    8208628  438.4   12825982  685.0
+Vcells 37264387 284.4  436994426 3334.1 1021899506 7796.5
 > head(full_activeset3)
              device_id gender age  group   ind numbrand nummodel numCategories
 1 -8076087639492063270      M  35 M32-38 train       24      939     AppCat_NA

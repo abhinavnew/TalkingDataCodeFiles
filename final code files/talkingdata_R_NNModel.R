@@ -205,7 +205,7 @@ full_wide=dcast(wide,device_id+gender+age+group+ind+numbrand+nummodel+Bin_1+Bin_
 dim(full_wide)
 
 txtStop()
-##trainset prep common for BOTH STACKING MODELS
+##trainset preparation
 
 ##preparing train and validate set
 trainset=subset(full_wide,full_wide$ind=="train")
@@ -222,17 +222,21 @@ validate_splitt=subset(trainsetfull,splitt==FALSE)
 
 dim(trainset_splitt)
 dim(validate_splitt)
-trainset_splitt=trainset_splitt[complete.cases(trainset_splitt),]
-validate_splitt=validate_splitt[complete.cases(validate_splitt),]
+colnames(trainset_splitt)
+colnames(validate_splitt)
+##trainset_splitt=trainset_splitt[complete.cases(trainset_splitt),]
+##validate_splitt=validate_splitt[complete.cases(validate_splitt),]
+
+#drop time bins and Appcat_NA columns due to missing values
+trainset_splitt=trainset_splitt[,-c(4,5,6,7,444)]
+validate_splitt-validate_splitt[,-c(4,5,6,7,444)]
 
 dim(trainset_splitt)
 dim(validate_splitt)
+colnames(trainset_splitt)
+colnames(validate_splitt)
 
-#drop AppCAt_NA column as it holds no meaning 
-trainset_splitt=trainset_splitt[,-c(444)]
-validate_splitt=validate_splitt[,-c(444)]
-dim(trainset_splitt)
-dim(validate_splitt)
+
 
 
 
@@ -247,7 +251,12 @@ sclfun=function(x){
   return(k)
   }
 trainset_scl=trainset_splitt
-trainset_scl2=apply(trainset_scl[-1],2,sclfun)
+trainset_scl2=data.frame(apply(trainset_scl[-1],2,sclfun))
+dim(trainset_scl2)
+trainset_scl2=cbind(trainset_splitt[,1],trainset_scl2)
+colnames(trainset_scl2)[colnames(trainset_scl2)=='trainset_splitt[, 1]']<-'group'
+dim(trainset_scl2)
+glimpse(trainset_scl2)
 
 
 
@@ -266,19 +275,63 @@ testset=testset[,-c(1,2,3,5)]
 ## remove duplicates (from testset) based on just one field ie device id ,doesn't matter which row is removed 
 colnames(testset)
 dim(testset)
-##dropping timeBin columns due to NA values 
-testset_fin=testset[,-c(4,5,6,7)]
+##dropping timeBin and App_catNA columns due to NA values 
+testset_fin=testset[,-c(4,5,6,7,444)]
+dim(testset_fin)
+##min max scaling 
+testset_scl2=data.frame(apply(testset_fin[-1],2,sclfun))
+
+dim(testset_scl2)
+
+glimpse(testset_scl2)
+
+
+
+
+
+
 
 ##training a neuralnet model and tuning
+rm(m)
 set.seed(123)
 
-m=neuralnet(group ~ .,data=trainset_splitt,hidden = 1,threshold = 0.1,linear.output = FALSEglimpse)
+m=neuralnet(group ~ numbrand+nummodel+AppCat_100+AppCat_105+AppCat_106+AppCat_107+AppCat_109+AppCat_110+AppCat_112+AppCat_114+AppCat_118+AppCat_119+AppCat_121+AppCat_123+
+              AppCat_124+AppCat_126+AppCat_129+AppCat_131+AppCat_134+AppCat_135+AppCat_136+AppCat_137+AppCat_140+AppCat_141+AppCat_142+AppCat_143+AppCat_145+AppCat_147+
+              AppCat_148+AppCat_151+AppCat_152+AppCat_158+AppCat_159+AppCat_16+AppCat_160+AppCat_161+AppCat_165+AppCat_17+AppCat_170+AppCat_172+AppCat_175+AppCat_176
+            +AppCat_177+AppCat_179+AppCat_18+AppCat_182+AppCat_185+AppCat_188+AppCat_19+AppCat_191+AppCat_192+AppCat_193+AppCat_194+AppCat_199+AppCat_2+AppCat_200+AppCat_202+
+              AppCat_203+AppCat_205+AppCat_206+AppCat_21+AppCat_210+AppCat_211+AppCat_219+AppCat_22+AppCat_220+AppCat_227+AppCat_239+AppCat_24+AppCat_242+AppCat_245+AppCat_247
+            +AppCat_249+AppCat_252+AppCat_254+AppCat_255+AppCat_260+AppCat_261+AppCat_262+AppCat_269+AppCat_270+AppCat_271+AppCat_272+AppCat_276+AppCat_277+AppCat_28+AppCat_280+
+              AppCat_281+AppCat_284+AppCat_285+AppCat_287+AppCat_289+AppCat_29+AppCat_290+AppCat_291+AppCat_292+AppCat_294+AppCat_296+AppCat_297+AppCat_298+AppCat_299+AppCat_3+
+              AppCat_302+AppCat_306+AppCat_309+AppCat_31+AppCat_310+AppCat_312+AppCat_313+AppCat_328+AppCat_329+AppCat_33+AppCat_330+AppCat_331+AppCat_335+AppCat_337+AppCat_339+
+              AppCat_34+AppCat_341+AppCat_343+AppCat_344+AppCat_345+AppCat_346+AppCat_350+AppCat_351+AppCat_352+AppCat_355+AppCat_357+AppCat_358+AppCat_359+AppCat_36+AppCat_360+
+              AppCat_365+AppCat_366+AppCat_368+AppCat_37+AppCat_370+AppCat_379+AppCat_38+AppCat_381+AppCat_383+AppCat_385+AppCat_388+AppCat_39+AppCat_392+AppCat_396+AppCat_398+
+              AppCat_4+AppCat_400+AppCat_401+AppCat_402+AppCat_403+AppCat_406+AppCat_407+AppCat_408+AppCat_409+AppCat_41+AppCat_411+AppCat_412+AppCat_414+AppCat_415+AppCat_423+
+              AppCat_424+AppCat_425+AppCat_427+AppCat_428+AppCat_43+AppCat_430+AppCat_431+AppCat_432+AppCat_433+AppCat_434+AppCat_437+AppCat_438+AppCat_439+AppCat_44+AppCat_440+
+              AppCat_442+AppCat_443+AppCat_444+AppCat_445+AppCat_446+AppCat_450+AppCat_451+AppCat_452+AppCat_453+AppCat_454+AppCat_455+AppCat_458+AppCat_459+AppCat_461+AppCat_464+
+              AppCat_465+AppCat_466+AppCat_467+AppCat_468+AppCat_469+AppCat_470+AppCat_471+AppCat_472+AppCat_474+AppCat_475+AppCat_477+AppCat_478+AppCat_479+AppCat_48+AppCat_480+
+              AppCat_481+AppCat_485+AppCat_487+AppCat_488+AppCat_489+AppCat_49+AppCat_490+AppCat_495+AppCat_498+AppCat_499+AppCat_501+AppCat_504+AppCat_505+AppCat_514+AppCat_516+
+              AppCat_519+AppCat_522+AppCat_524+AppCat_525+AppCat_527+AppCat_530+AppCat_531+AppCat_536+AppCat_537+AppCat_538+AppCat_540+AppCat_541+AppCat_542+AppCat_546+AppCat_547+
+              AppCat_548+AppCat_549+AppCat_550+AppCat_551+AppCat_552+AppCat_553+AppCat_554+AppCat_555+AppCat_556+AppCat_560+AppCat_561+AppCat_562+AppCat_566+AppCat_569+AppCat_570+
+              AppCat_571+AppCat_575+AppCat_579+AppCat_580+AppCat_582+AppCat_585+AppCat_586+AppCat_588+AppCat_59+AppCat_591+AppCat_592+AppCat_596+AppCat_597+AppCat_60+AppCat_604+
+              AppCat_605+AppCat_606+AppCat_607+AppCat_608+AppCat_610+AppCat_611+AppCat_612+AppCat_613+AppCat_614+AppCat_616+AppCat_618+AppCat_620+AppCat_621+AppCat_624+AppCat_625+
+              AppCat_627+AppCat_628+AppCat_63+AppCat_630+AppCat_631+AppCat_632+AppCat_633+AppCat_635+AppCat_636+AppCat_638+AppCat_639+AppCat_64+AppCat_640+AppCat_642+AppCat_644+
+              AppCat_646+AppCat_647+AppCat_648+AppCat_649+AppCat_650+AppCat_651+AppCat_652+AppCat_653+AppCat_655+AppCat_656+AppCat_658+AppCat_659+AppCat_660+AppCat_661+AppCat_662+
+              AppCat_663+AppCat_664+AppCat_665+AppCat_668+AppCat_670+AppCat_671+AppCat_672+AppCat_674+AppCat_676+AppCat_677+AppCat_678+AppCat_679+AppCat_68+AppCat_680+AppCat_681+
+              AppCat_682+AppCat_683+AppCat_684+AppCat_685+AppCat_687+AppCat_688+AppCat_689+AppCat_690+AppCat_691+AppCat_692+AppCat_694+AppCat_697+AppCat_699+AppCat_7+AppCat_700+
+              AppCat_701+AppCat_703+AppCat_705+AppCat_707+AppCat_708+AppCat_709+AppCat_710+AppCat_711+AppCat_712+AppCat_713+AppCat_714+AppCat_715+AppCat_717+AppCat_719+AppCat_722+
+              AppCat_723+AppCat_725+AppCat_726+AppCat_727+AppCat_728+AppCat_729+AppCat_73+AppCat_730+AppCat_731+AppCat_732+AppCat_733+AppCat_734+AppCat_735+AppCat_737+AppCat_738+
+              AppCat_739+AppCat_74+AppCat_744+AppCat_745+AppCat_760+AppCat_762+AppCat_765+AppCat_766+AppCat_767+AppCat_768+AppCat_769+AppCat_770+AppCat_771+AppCat_773+AppCat_775+
+              AppCat_776+AppCat_777+AppCat_778+AppCat_780+AppCat_781+AppCat_784+AppCat_785+AppCat_786+AppCat_787+AppCat_789+AppCat_790+AppCat_791+AppCat_792+AppCat_793+AppCat_797+
+              AppCat_799+AppCat_80+AppCat_800+AppCat_801+AppCat_804+AppCat_805+AppCat_806+AppCat_807+AppCat_808+AppCat_809+AppCat_81+AppCat_810+AppCat_812+AppCat_815+AppCat_817+
+              AppCat_820+AppCat_821+AppCat_823+AppCat_824+AppCat_827+AppCat_828+AppCat_829+AppCat_83+AppCat_830+AppCat_832+AppCat_833+AppCat_836+AppCat_84+AppCat_85+AppCat_87+
+              AppCat_90+AppCat_92+AppCat_95+AppCat_96+AppCat_97+AppCat_99,data=trainset_scl2,linear.output = FALSE,hidden = 2,threshold = 0.1)
 plot(m)
 
 ##making predictions
 
 p=compute(m,validate_splitt)
 prob_validate=p$net.result
+write.csv(prob_validate,"E:\\AbhinavB\\Kaggle\\prob_validate.csv")
 
 
 
