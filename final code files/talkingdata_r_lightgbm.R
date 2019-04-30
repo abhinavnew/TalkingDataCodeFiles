@@ -212,7 +212,7 @@ trainset=subset(full_wide,full_wide$ind=="train")
 ## remove duplicate based on just one field ie device id ,doesn't matter which row is removed 
 trainset=trainset[!duplicated(trainset$device_id),]
 
-##trainset prep for xgboost :::::
+
 ##removing cols including device id which is unique and not useful for modelling
 trainset=trainset[,-c(1,2,3,5)]
 ##all categorical variables are of character datatype so far 
@@ -228,8 +228,6 @@ cat.namevec=c("group","nummodel","numbrand")
 
 
 lgbtrain=lgb.Dataset(data =as.matrix(train_m),label=tr_labels)
-
-##dtrain=xgb.DMatrix(data=as.matrix(train_m),label=tr_labels,missing = NA)
 
 
 
@@ -296,28 +294,6 @@ write.csv(res_submit,"E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\lightg
 
 
 
-
-
-
-
-
-
-
-
-##making predictions on unseen data
-
-pred=predict(xgb_mod1,newdata=dtest)
-
-length(pred)
-
-endtime=proc.time()
-timetakens=starttime-endtime
-timetakens
-
-pred_detail=matrix(pred,nrow = length(ts_labels))
-res_submit=cbind(test_dev_id,as.data.frame(pred_detail))
-colnames(res_submit)=c("device_id","F23-","F24-26","F27-28","F29-32","F33-42","F43+","M22-","M23-26","M27-28","M29-31","M32-38","M39+")
-write.csv(res_submit,"E:\\AbhinavB\\Kaggle\\TalkingData\\SubmissionFiles\\Submit3.csv",row.names = F,quote = F)
 
 
 

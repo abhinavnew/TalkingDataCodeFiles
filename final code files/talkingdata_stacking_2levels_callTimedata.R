@@ -24,6 +24,10 @@ library(scales)
 library(TeachingDemos)
 library(neuralnet)
 
+
+## This stacked model has 2 levels -level 1 -xgboost and rf/boruta ,level 2-gbm/caret
+
+
 #scientific notation off for the session
 options(scipen = 999)
 rm(list = ls());gc()
